@@ -1,6 +1,18 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Main {
+
+    private static final int PLAN_WEEK = 1;
+    private static final int PRINT_LIST = 2;
+    private static final int ADD_FOOD_TYPE = 3;
+    private static final int REMOVE_FOOD_TYPE = 4;
+    private static final int QUIT_PROGRAM = -1;
+
+    private static final String filePath = "./src/foodtypes.txt";
+
     enum Day {
         MONDAY,
         TUESDAY,
@@ -16,25 +28,28 @@ public class Main {
         System.out.println("Thank you for using Food Planner!");
         Scanner scanner = new Scanner(System.in);
 
-        while (input != -1) {
+        System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
+
+        while (input != QUIT_PROGRAM) {
             printUserInterface();
             input = scanner.nextInt();
 
             switch (input) {
-                case 1:
+                case PLAN_WEEK:
                     planWeek();
                     break;
-                case 2:
+                case PRINT_LIST:
                     printList();
                     break;
-                case 3:
+                case ADD_FOOD_TYPE:
                     addFoodType();
                     break;
-                case 4:
+                case REMOVE_FOOD_TYPE:
                     removeFoodType();
                     break;
-                case -1:
+                case QUIT_PROGRAM:
                     System.out.println("Quitting the program...");
+                    break;
                 default:
                     System.out.println("Invalid choice. Try again.");
                     break;
@@ -44,7 +59,7 @@ public class Main {
     }
 
     static void printUserInterface() {
-        System.out.println("\nChoose a feature by typing the index number. (-1 quits the program)\n");
+        System.out.println("\nChoose a feature by typing the index number. (-1 quits the program)");
         System.out.println("1. Plan a week");
         System.out.println("2. Print the list of foods");
         System.out.println("3. Add a food");
@@ -60,7 +75,19 @@ public class Main {
 
     // TBD Print method for food types saved in a file
     static void printList() {
-        System.out.println("This feature isn't ready");
+        try (FileReader fileReader = new FileReader(filePath);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+
+            String line;
+            System.out.print("\n");
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            bufferedReader.close();
+
+        } catch (IOException e) {
+            System.err.println("An error occured: " + e);
+        }
     }
 
     // TBD Method for adding a food type to a file
