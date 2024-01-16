@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
     private static final int REMOVE_FOOD_TYPE = 4;
     private static final int QUIT_PROGRAM = -1;
 
-    private static final String filePath = "./src/foodtypes.txt";
+    private static final String FILE_PATH = "./foodtypes.txt";
 
     enum Day {
         MONDAY,
@@ -27,8 +28,6 @@ public class Main {
         int input = 0;
         System.out.println("Thank you for using Food Planner!");
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Current Working Directory: " + System.getProperty("user.dir"));
 
         while (input != QUIT_PROGRAM) {
             printUserInterface();
@@ -69,13 +68,66 @@ public class Main {
 
     // TBD Scheduler for each day of the week
     static void planWeek() {
-        System.out.println("This feature isn't ready");
+        String[] foods = new String[7];
+        getFoods(foods);
+        for (String food : foods) {
+            System.out.println(food);
+        }
+    }
+
+    static int getAmountOfEntries() {
+        int lineCounter = 0;
+
+        try (FileReader fileReader = new FileReader(FILE_PATH);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+            while (null != bufferedReader.readLine()) {
+                lineCounter++;
+            }
+        } catch (IOException e) {
+            System.err.println("An error occured: " + e);
+        }
+
+        return lineCounter;
+    }
+
+    static void getFoods(String[] listOfFoods) {
+        Random random = new Random();
+        int indexToGet;
+        int i = 0;
+        int amountOfIndexes = getAmountOfEntries();
+        boolean isUnique;
+
+        while (i < listOfFoods.length) {
+            indexToGet = random.nextInt(amountOfIndexes);
+            isUnique = true;
+
+            try (FileReader fileReader = new FileReader(FILE_PATH);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+                
+                for (int j = 0; j < indexToGet; j++) {
+                    bufferedReader.readLine();
+                }
+                listOfFoods[i] = bufferedReader.readLine();
+
+                for (int k = 0; k < i; k++) {
+                    if (listOfFoods[i].equals(listOfFoods[k])) {
+                        isUnique = false;
+                    }
+                }
+
+                if (isUnique) {
+                    i++;
+                }
+            } catch (IOException e) {
+                System.err.println("An error occured: " + e);
+            }
+        }
     }
 
 
     // TBD Print method for food types saved in a file
     static void printList() {
-        try (FileReader fileReader = new FileReader(filePath);
+        try (FileReader fileReader = new FileReader(FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
             String line;
@@ -83,7 +135,6 @@ public class Main {
             while ((line = bufferedReader.readLine()) != null) {
                 System.out.println(line);
             }
-            bufferedReader.close();
 
         } catch (IOException e) {
             System.err.println("An error occured: " + e);
