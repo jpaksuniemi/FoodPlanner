@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -31,7 +32,7 @@ public class Main {
 
         while (input != QUIT_PROGRAM) {
             printUserInterface();
-            input = scanner.nextInt();
+            input = readIntInput(scanner);
 
             switch (input) {
                 case PLAN_WEEK:
@@ -57,6 +58,17 @@ public class Main {
         scanner.close();
     }
 
+    static int readIntInput(Scanner scanner) {
+        while (true) {
+            try {
+                return scanner.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.print("\nYour input wasn't an integer, please try again > ");
+                scanner.nextLine();
+            }
+        }
+    }
+
     static void printUserInterface() {
         System.out.println("\nChoose a feature by typing the index number. (-1 quits the program)");
         System.out.println("1. Plan a week");
@@ -70,8 +82,11 @@ public class Main {
     static void planWeek() {
         String[] foods = new String[7];
         getFoods(foods);
-        for (String food : foods) {
-            System.out.println(food);
+        int i = 0;
+        System.out.println();
+        for (Day day : Day.values()) {
+            System.out.print(day + " " + foods[i] + "\n");
+            i++;
         }
     }
 
@@ -103,7 +118,7 @@ public class Main {
 
             try (FileReader fileReader = new FileReader(FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-                
+
                 for (int j = 0; j < indexToGet; j++) {
                     bufferedReader.readLine();
                 }
@@ -124,8 +139,6 @@ public class Main {
         }
     }
 
-
-    // TBD Print method for food types saved in a file
     static void printList() {
         try (FileReader fileReader = new FileReader(FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
