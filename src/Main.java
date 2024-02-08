@@ -15,7 +15,7 @@ public class Main {
 
     private static final String FILE_PATH = "./foodtypes.txt";
 
-    enum Day {
+    private static enum Day {
         MONDAY,
         TUESDAY,
         WEDNESDAY,
@@ -58,7 +58,7 @@ public class Main {
         scanner.close();
     }
 
-    static int readIntInput(Scanner scanner) {
+    private static int readIntInput(Scanner scanner) {
         while (true) {
             try {
                 return scanner.nextInt();
@@ -69,7 +69,7 @@ public class Main {
         }
     }
 
-    static void printUserInterface() {
+    public static void printUserInterface() {
         System.out.println("\nChoose a feature by typing the index number. (-1 quits the program)");
         System.out.println("1. Plan a week");
         System.out.println("2. Print the list of foods");
@@ -79,7 +79,7 @@ public class Main {
     }
 
     // TBD Scheduler for each day of the week
-    static void planWeek() {
+    public static void planWeek() {
         String[] foods = new String[7];
         getFoods(foods);
         int i = 0;
@@ -90,7 +90,7 @@ public class Main {
         }
     }
 
-    static int getAmountOfEntries() {
+    private static int getAmountOfEntries() {
         int lineCounter = 0;
 
         try (FileReader fileReader = new FileReader(FILE_PATH);
@@ -105,7 +105,7 @@ public class Main {
         return lineCounter;
     }
 
-    static void getFoods(String[] listOfFoods) {
+    private static void getFoods(String[] listOfFoods) {
         Random random = new Random();
         int indexToGet;
         int i = 0;
@@ -139,16 +139,17 @@ public class Main {
         }
     }
 
-    static void printList() {
+    public static void printList() {
         try (FileReader fileReader = new FileReader(FILE_PATH);
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
-
+            int i = 1;
             String line;
-            System.out.print("\n");
+            System.out.println();
             while ((line = bufferedReader.readLine()) != null) {
+                System.out.print(i + ". ");
                 System.out.println(line);
+                i++;
             }
-
         } catch (IOException e) {
             System.err.println("An error occured: " + e);
         }
